@@ -18,6 +18,6 @@ class ServiceTest {
     @Test
     fun testGetSku() {
         val response = restTemplate.getForEntity("/skus/1", Sku::class.java)
-        assertThat(response.statusCode.is2xxSuccessful, equalTo(true))
+        assertThat(response.statusCode.value(), equalTo(200))
     }
 }

@@ -3,25 +3,39 @@ package com.dansiwiec.kafkatesting.controllers
 import com.dansiwiec.kafkatesting.Topics
 import com.dansiwiec.kafkatesting.models.Order
 import com.dansiwiec.kafkatesting.models.OrderRequest
+import com.dansiwiec.kafkatesting.services.CatalogueService
 import org.slf4j.LoggerFactory
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/orders")
-class OrderController(val template: KafkaTemplate<String, Order>) {
+class OrderController(
+    val template: KafkaTemplate<String, Order>,
+    val catalogueService: CatalogueService
+) {
 
-    var logger = LoggerFactory.getLogger(OrderController::class.java)!!
+    var logger = LoggerFactory.getLogger(this::class.java)!!
 
     @PostMapping
-    fun createOrder(@RequestBody wireOrder: OrderRequest) : ResponseEntity<Order> {
+    fun createOrder(@RequestBody wireOrder: OrderRequest): ResponseEntity<Order> {
         val order = Order.toOrder(wireOrder)
         logger.info("Creating order ${order.id}")
+        validateOrder(order)
         template.send(Topics.ORDERS, order.id.toString(), order)
         return ResponseEntity.ok(order)
     }
+
+    private fun validateOrder(order: Order) {
+        order.items.find { !catalogueService.isValid(it.sku) }?.let { throw BadSkuException() }
+    }
 }
+
+@ResponseStatus(code = HttpStatus.BAD_REQUEST, reason = "SKU invalid")
+class BadSkuException : RuntimeException()

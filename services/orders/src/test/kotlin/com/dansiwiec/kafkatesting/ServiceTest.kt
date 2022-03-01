@@ -8,16 +8,25 @@ import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.matchesRegex
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.kafka.test.utils.KafkaTestUtils
+import org.springframework.test.web.client.ExpectedCount.manyTimes
+import org.springframework.test.web.client.MockRestServiceServer
+import org.springframework.test.web.client.ResponseActions
+import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
+import org.springframework.test.web.client.response.MockRestResponseCreators.withStatus
+import org.springframework.web.client.RestTemplate
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -32,18 +41,34 @@ class ServiceTest {
     lateinit var embeddedKafkaBroker: EmbeddedKafkaBroker
 
     @Autowired
-    lateinit var restTemplate: TestRestTemplate
+    lateinit var testRestTemplate: TestRestTemplate
+
+    @Autowired
+    lateinit var restTemplate: RestTemplate
+
+    @Value("\${catalogueService.url}")
+    lateinit var catalogueService: String
 
     lateinit var consumer: Consumer<String, Order>
+    lateinit var catalogueServiceResponse: ResponseActions
 
     @BeforeEach
     fun init() {
         consumer = testConsumer(embeddedKafkaBroker)
+        catalogueServiceResponse = MockRestServiceServer.createServer(restTemplate)
+            .expect(manyTimes(), requestTo(matchesRegex("$catalogueService/skus/\\d*")))
     }
 
     @Test
     fun testCreateOrder() {
-        restTemplate.postForEntity("/orders", OrderRequest(items=listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java)
+        catalogueServiceResponse.andRespond(withStatus(HttpStatus.OK))
+
+        val response = testRestTemplate.postForEntity(
+            "/orders",
+            OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))),
+            Order::class.java
+        )
+        assertThat(response.statusCode.value(), equalTo(200))
         val singleRecord = KafkaTestUtils.getSingleRecord(consumer, Topics.ORDERS)
         assertThat(singleRecord.key(), equalTo("0"))
         assertThat(singleRecord.value().id, equalTo(0))

@@ -1,4 +1,4 @@
-package com.dansiwiec.kafkatesting
+package com.dansiwiec.orders
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

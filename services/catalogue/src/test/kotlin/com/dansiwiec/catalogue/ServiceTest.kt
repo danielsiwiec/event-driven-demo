@@ -1,6 +1,6 @@
-package com.dansiwiec.kafkatesting
+package com.dansiwiec.catalogue
 
-import com.dansiwiec.kafkatesting.models.Sku
+import com.dansiwiec.catalogue.models.Sku
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.Test

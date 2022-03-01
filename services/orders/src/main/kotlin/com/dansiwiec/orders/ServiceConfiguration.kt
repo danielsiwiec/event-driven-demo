@@ -1,4 +1,4 @@
-package com.dansiwiec.kafkatesting
+package com.dansiwiec.orders
 
 import org.springframework.boot.web.client.RestTemplateBuilder
 import org.springframework.context.annotation.Bean

@@ -1,3 +1,3 @@
-package com.dansiwiec.kafkatesting.models
+package com.dansiwiec.catalogue.models
 
 data class Sku(val id:Int, val name:String, val category:String, val price:Double)

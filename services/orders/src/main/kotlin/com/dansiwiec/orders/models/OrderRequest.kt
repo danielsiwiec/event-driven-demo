@@ -1,4 +1,4 @@
-package com.dansiwiec.kafkatesting.models
+package com.dansiwiec.orders.models
 
 import javax.validation.constraints.NotEmpty
 

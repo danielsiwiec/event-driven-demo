@@ -1,4 +1,4 @@
-package com.dansiwiec.kafkatesting.models
+package com.dansiwiec.orders.models
 
 data class Order(var id: Int = 0, var items: List<LineItem>) {
 

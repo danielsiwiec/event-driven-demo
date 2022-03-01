@@ -1,6 +1,6 @@
-package com.dansiwiec.kafkatesting.controllers
+package com.dansiwiec.catalogue.controllers
 
-import com.dansiwiec.kafkatesting.models.Sku
+import com.dansiwiec.catalogue.models.Sku
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

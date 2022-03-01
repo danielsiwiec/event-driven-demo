@@ -1,4 +1,4 @@
-package com.dansiwiec.kafkatesting
+package com.dansiwiec.orders
 
 import org.apache.kafka.clients.admin.NewTopic
 import org.springframework.context.annotation.Bean

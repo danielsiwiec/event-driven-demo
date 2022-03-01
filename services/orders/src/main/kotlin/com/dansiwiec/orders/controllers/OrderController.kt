@@ -1,9 +1,9 @@
-package com.dansiwiec.kafkatesting.controllers
+package com.dansiwiec.orders.controllers
 
-import com.dansiwiec.kafkatesting.Topics
-import com.dansiwiec.kafkatesting.models.Order
-import com.dansiwiec.kafkatesting.models.OrderRequest
-import com.dansiwiec.kafkatesting.services.CatalogueService
+import com.dansiwiec.orders.Topics
+import com.dansiwiec.orders.models.Order
+import com.dansiwiec.orders.models.OrderRequest
+import com.dansiwiec.orders.services.CatalogueService
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

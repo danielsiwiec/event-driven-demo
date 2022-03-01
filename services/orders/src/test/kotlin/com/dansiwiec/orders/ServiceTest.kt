@@ -1,15 +1,14 @@
-package com.dansiwiec.kafkatesting
+package com.dansiwiec.orders
 
-import com.dansiwiec.kafkatesting.models.LineItem
-import com.dansiwiec.kafkatesting.models.Order
-import com.dansiwiec.kafkatesting.models.OrderRequest
+import com.dansiwiec.orders.models.LineItem
+import com.dansiwiec.orders.models.Order
+import com.dansiwiec.orders.models.OrderRequest
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.matchesRegex
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

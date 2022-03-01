@@ -20,4 +20,10 @@ class ServiceTest {
         val response = restTemplate.getForEntity("/skus/1", Sku::class.java)
         assertThat(response.statusCode.value(), equalTo(200))
     }
+
+    @Test
+    fun testGetSkuNotFound() {
+        val response = restTemplate.getForEntity("/skus/999", Void::class.java)
+        assertThat(response.statusCode.value(), equalTo(404))
+    }
 }

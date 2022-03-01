@@ -9,6 +9,7 @@ import org.apache.kafka.common.serialization.StringDeserializer
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.matchesRegex
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -21,15 +22,18 @@ import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.kafka.test.utils.KafkaTestUtils
+import org.springframework.test.annotation.DirtiesContext
 import org.springframework.test.web.client.ExpectedCount.manyTimes
 import org.springframework.test.web.client.MockRestServiceServer
 import org.springframework.test.web.client.ResponseActions
 import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
 import org.springframework.test.web.client.response.MockRestResponseCreators.withStatus
 import org.springframework.web.client.RestTemplate
+import java.time.Duration
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@DirtiesContext
 @EmbeddedKafka(
     topics = [Topics.ORDERS],
     bootstrapServersProperty = "spring.kafka.bootstrap-servers",
@@ -59,8 +63,13 @@ class ServiceTest {
             .expect(manyTimes(), requestTo(matchesRegex("$catalogueService/skus/\\d*")))
     }
 
+    @AfterEach
+    fun close() {
+        consumer.close()
+    }
+
     @Test
-    fun testCreateOrder() {
+    fun testCreateOrderHappyPath() {
         catalogueServiceResponse.andRespond(withStatus(HttpStatus.OK))
 
         val response = testRestTemplate.postForEntity(
@@ -68,10 +77,26 @@ class ServiceTest {
             OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))),
             Order::class.java
         )
+        val orderId = response.body!!.id
+
         assertThat(response.statusCode.value(), equalTo(200))
         val singleRecord = KafkaTestUtils.getSingleRecord(consumer, Topics.ORDERS)
-        assertThat(singleRecord.key(), equalTo("0"))
-        assertThat(singleRecord.value().id, equalTo(0))
+        assertThat(singleRecord.key(), equalTo(orderId.toString()))
+        assertThat(singleRecord.value().id, equalTo(orderId))
+    }
+
+    @Test
+    fun testCreateOrderSkuNotFound() {
+        catalogueServiceResponse.andRespond(withStatus(HttpStatus.NOT_FOUND))
+
+        val response = testRestTemplate.postForEntity(
+            "/orders",
+            OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))),
+            Order::class.java
+        )
+        assertThat(response.statusCode.value(), equalTo(400))
+        val records = KafkaTestUtils.getRecords(consumer, Duration.ofSeconds(5).toMillis())
+        assertThat(records.count(), equalTo(0))
     }
 
     private fun testConsumer(embeddedKafka: EmbeddedKafkaBroker): Consumer<String, Order> {

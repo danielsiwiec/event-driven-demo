@@ -33,7 +33,7 @@ import java.time.Duration
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@DirtiesContext
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @EmbeddedKafka(
     topics = [Topics.ORDERS],
     bootstrapServersProperty = "spring.kafka.bootstrap-servers",
@@ -63,19 +63,12 @@ class ServiceTest {
             .expect(manyTimes(), requestTo(matchesRegex("$catalogueService/skus/\\d*")))
     }
 
-    @AfterEach
-    fun close() {
-        consumer.close()
-    }
-
     @Test
     fun testCreateOrderHappyPath() {
         catalogueServiceResponse.andRespond(withStatus(HttpStatus.OK))
 
         val response = testRestTemplate.postForEntity(
-            "/orders",
-            OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))),
-            Order::class.java
+            "/orders", OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java
         )
         val orderId = response.body!!.id
 
@@ -90,12 +83,23 @@ class ServiceTest {
         catalogueServiceResponse.andRespond(withStatus(HttpStatus.NOT_FOUND))
 
         val response = testRestTemplate.postForEntity(
-            "/orders",
-            OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))),
-            Order::class.java
+            "/orders", OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java
         )
         assertThat(response.statusCode.value(), equalTo(400))
         val records = KafkaTestUtils.getRecords(consumer, Duration.ofSeconds(5).toMillis())
+        assertThat(records.count(), equalTo(0))
+    }
+
+    @Test
+    fun testCreateOrderNoLineItems() {
+        catalogueServiceResponse.andRespond(withStatus(HttpStatus.NOT_FOUND))
+
+        val response = testRestTemplate.postForEntity(
+            "/orders", OrderRequest(items = emptyList()), Order::class.java
+        )
+        val records = KafkaTestUtils.getRecords(consumer, Duration.ofSeconds(5).toMillis())
+
+        assertThat(response.statusCode.value(), equalTo(400))
         assertThat(records.count(), equalTo(0))
     }
 

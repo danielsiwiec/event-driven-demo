@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 @RequestMapping("/orders")
@@ -24,7 +25,7 @@ class OrderController(
     var logger = LoggerFactory.getLogger(this::class.java)!!
 
     @PostMapping
-    fun createOrder(@RequestBody wireOrder: OrderRequest): ResponseEntity<Order> {
+    fun createOrder(@RequestBody @Valid wireOrder: OrderRequest): ResponseEntity<Order> {
         val order = Order.toOrder(wireOrder)
         logger.info("Creating order ${order.id}")
         validateOrder(order)

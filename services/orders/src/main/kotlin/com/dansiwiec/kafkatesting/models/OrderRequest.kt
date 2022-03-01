@@ -1,5 +1,7 @@
 package com.dansiwiec.kafkatesting.models
 
-data class OrderRequest(val items: List<LineItem>) {
+import javax.validation.constraints.NotEmpty
+
+data class OrderRequest(@field:NotEmpty val items: List<LineItem>) {
     constructor(): this(emptyList())
 }

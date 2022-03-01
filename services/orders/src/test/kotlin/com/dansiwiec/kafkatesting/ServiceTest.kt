@@ -6,6 +6,8 @@ import com.dansiwiec.kafkatesting.models.OrderRequest
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,10 +42,11 @@ class ServiceTest {
     }
 
     @Test
-    fun blah() {
+    fun testCreateOrder() {
         restTemplate.postForEntity("/orders", OrderRequest(items=listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java)
         val singleRecord = KafkaTestUtils.getSingleRecord(consumer, Topics.ORDERS)
-        println(singleRecord)
+        assertThat(singleRecord.key(), equalTo("0"))
+        assertThat(singleRecord.value().id, equalTo(0))
     }
 
     private fun testConsumer(embeddedKafka: EmbeddedKafkaBroker): Consumer<String, Order> {

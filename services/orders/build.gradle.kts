@@ -34,4 +34,6 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    testLogging.events = setOf(org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED)
+    testLogging.exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
 }

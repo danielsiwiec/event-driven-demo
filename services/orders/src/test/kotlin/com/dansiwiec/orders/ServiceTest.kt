@@ -3,32 +3,28 @@ package com.dansiwiec.orders
 import com.dansiwiec.orders.models.LineItem
 import com.dansiwiec.orders.models.Order
 import com.dansiwiec.orders.models.OrderRequest
+import com.dansiwiec.orders.models.Sku
+import com.dansiwiec.orders.repository.SkusRepository
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.awaitility.Awaitility.await
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.matchesRegex
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate
-import org.springframework.http.HttpStatus
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
+import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.test.EmbeddedKafkaBroker
 import org.springframework.kafka.test.context.EmbeddedKafka
 import org.springframework.kafka.test.utils.KafkaTestUtils
 import org.springframework.test.annotation.DirtiesContext
-import org.springframework.test.web.client.ExpectedCount.manyTimes
-import org.springframework.test.web.client.MockRestServiceServer
-import org.springframework.test.web.client.ResponseActions
-import org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo
-import org.springframework.test.web.client.response.MockRestResponseCreators.withStatus
-import org.springframework.web.client.RestTemplate
 import java.time.Duration
+import java.util.concurrent.TimeUnit
 
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -44,27 +40,25 @@ class ServiceTest {
     lateinit var embeddedKafkaBroker: EmbeddedKafkaBroker
 
     @Autowired
+    lateinit var skusRepository: SkusRepository
+
+    @Autowired
     lateinit var testRestTemplate: TestRestTemplate
 
     @Autowired
-    lateinit var restTemplate: RestTemplate
-
-    @Value("\${catalogueService.url}")
-    lateinit var catalogueService: String
+    lateinit var kafkaTemplate: KafkaTemplate<String, Sku>
 
     lateinit var consumer: Consumer<String, Order>
-    lateinit var catalogueServiceResponse: ResponseActions
 
     @BeforeEach
     fun init() {
         consumer = testConsumer(embeddedKafkaBroker)
-        catalogueServiceResponse = MockRestServiceServer.createServer(restTemplate)
-            .expect(manyTimes(), requestTo(matchesRegex("$catalogueService/skus/\\d*")))
     }
 
     @Test
     fun testCreateOrderHappyPath() {
-        catalogueServiceResponse.andRespond(withStatus(HttpStatus.OK))
+
+        loadSkus(listOf("1", "3"))
 
         val response = testRestTemplate.postForEntity(
             "/orders", OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java
@@ -79,7 +73,8 @@ class ServiceTest {
 
     @Test
     fun testCreateOrderSkuNotFound() {
-        catalogueServiceResponse.andRespond(withStatus(HttpStatus.NOT_FOUND))
+
+        loadSkus(listOf("2"))
 
         val response = testRestTemplate.postForEntity(
             "/orders", OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java
@@ -91,7 +86,6 @@ class ServiceTest {
 
     @Test
     fun testCreateOrderNoLineItems() {
-        catalogueServiceResponse.andRespond(withStatus(HttpStatus.NOT_FOUND))
 
         val response = testRestTemplate.postForEntity(
             "/orders", OrderRequest(items = emptyList()), Order::class.java
@@ -100,6 +94,11 @@ class ServiceTest {
 
         assertThat(response.statusCode.value(), equalTo(400))
         assertThat(records.count(), equalTo(0))
+    }
+
+    private fun loadSkus(skus: List<String>) {
+        skus.forEach { kafkaTemplate.send(Topics.SKUS, it, Sku(it)) }
+        await().atMost(5, TimeUnit.SECONDS).until { skusRepository.skus.isNotEmpty() }
     }
 
     private fun testConsumer(embeddedKafka: EmbeddedKafkaBroker): Consumer<String, Order> {

@@ -1,16 +1,16 @@
 package com.dansiwiec.catalogue.controllers
 
+import com.dansiwiec.catalogue.Topics
 import com.dansiwiec.catalogue.models.Sku
 import org.slf4j.LoggerFactory
-import org.springframework.http.HttpStatus
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.kafka.core.KafkaTemplate
+import org.springframework.stereotype.Component
+import javax.annotation.PostConstruct
 
-@RestController
-@RequestMapping("/skus")
-class SkuController {
+@Component
+class SkuRepository(val template: KafkaTemplate<String, Sku>) {
 
-    var logger = LoggerFactory.getLogger(SkuController::class.java)!!
+    var logger = LoggerFactory.getLogger(this::class.java)!!
 
     companion object {
         val catalogue = mapOf(
@@ -23,11 +23,9 @@ class SkuController {
         )
     }
 
-    @GetMapping("/{id}")
-    fun createOrder(@PathVariable id: Int): ResponseEntity<Sku> {
-        return catalogue[id]?.let { ResponseEntity.ok(it) } ?: throw NotFoundException()
+    @PostConstruct
+    fun publishSkus() {
+        logger.info("Publishing SKUs")
+        catalogue.forEach { (id, sku) -> template.send(Topics.SKUS, id.toString(), sku)}
     }
 }
-
-@ResponseStatus(code = HttpStatus.NOT_FOUND)
-class NotFoundException : RuntimeException()

@@ -49,9 +49,13 @@ configure(subprojects.filter({ it.path.startsWith(":services:") })) {
         implementation("org.springframework.boot:spring-boot-starter-web")
         implementation("org.springframework.boot:spring-boot-starter-validation")
         implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("org.springframework.kafka:spring-kafka")
         implementation("org.jetbrains.kotlin:kotlin-reflect")
         implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+        testImplementation("org.springframework.kafka:spring-kafka-test")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
+        testImplementation("org.awaitility:awaitility:4.1.1")
+
     }
 
     tasks.withType<Test> {

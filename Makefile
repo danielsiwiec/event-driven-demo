@@ -4,8 +4,9 @@ build-all:
 	./gradlew clean bootJar
 start-in-background: build-all
 	docker-compose up -d
-up: start-in-background
+logs:
 	docker-compose logs --follow
+up: start-in-background logs
 down:
 	docker-compose down
 service-tests:

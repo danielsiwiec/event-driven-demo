@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
         <logger name="org.springframework" level="WARN"/>
+        <logger name="com.dansiwiec" level="DEBUG"/>
 
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder>

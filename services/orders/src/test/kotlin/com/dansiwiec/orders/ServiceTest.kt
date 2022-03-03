@@ -61,7 +61,7 @@ class ServiceTest {
         loadSkus(listOf("1", "3"))
 
         val response = testRestTemplate.postForEntity(
-            "/orders", OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java
+            "/orders", OrderRequest(items = listOf(LineItem("1", 1), LineItem("3", 2))), Order::class.java
         )
         val orderId = response.body!!.id
 
@@ -77,7 +77,7 @@ class ServiceTest {
         loadSkus(listOf("2"))
 
         val response = testRestTemplate.postForEntity(
-            "/orders", OrderRequest(items = listOf(LineItem(1, 1), LineItem(3, 2))), Order::class.java
+            "/orders", OrderRequest(items = listOf(LineItem("1", 1), LineItem("3", 2))), Order::class.java
         )
         assertThat(response.statusCode.value(), equalTo(400))
         val records = KafkaTestUtils.getRecords(consumer, Duration.ofSeconds(5).toMillis())

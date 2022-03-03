@@ -2,10 +2,8 @@ package com.dansiwiec.orders.repository
 
 import com.dansiwiec.orders.Topics
 import com.dansiwiec.orders.models.Sku
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
-import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.stereotype.Component
 
 @Component
@@ -21,5 +19,5 @@ class SkusRepository {
         skus.add(sku.id)
     }
 
-    fun isValid(sku: Int): Boolean = skus.contains(sku.toString())
+    fun isValid(sku: String): Boolean = skus.contains(sku)
 }

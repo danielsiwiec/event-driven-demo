@@ -18,3 +18,6 @@ run-e2e:
 e2e-tests: start-in-background wait-for-service run-e2e down
 test-request:
 	curl -X POST -H "Content-Type: application/json" http://localhost:8080/orders -d "{\"items\":[123, 456]}"
+run-perf:
+	./gradlew gatlingRun
+perf-tests: start-in-background wait-for-service run-perf down

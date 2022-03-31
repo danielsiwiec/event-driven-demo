@@ -55,12 +55,15 @@ configure(subprojects.filter({ it.path.startsWith(":services:") })) {
         testImplementation("org.springframework.kafka:spring-kafka-test")
         testImplementation("org.springframework.boot:spring-boot-starter-test")
         testImplementation("org.awaitility:awaitility:4.1.1")
-
+        testImplementation("org.testcontainers:testcontainers:1.16.3")
+        testImplementation("org.testcontainers:junit-jupiter:1.16.3")
+        testImplementation("org.testcontainers:kafka:1.16.3")
     }
 
     tasks.withType<Test> {
         useJUnitPlatform()
         testLogging.events = setOf(org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED)
         testLogging.exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+//        testLogging.showStandardStreams = true
     }
 }

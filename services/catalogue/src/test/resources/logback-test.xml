@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml" />
+    <logger name="org.testcontainers" level="INFO" />
+    <logger name="org.apache.kafka.clients.NetworkClient" level="ERROR" />
+    <logger name="com.dansiwiec" level="DEBUG" />
+
+    <root level="WARN">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</configuration>

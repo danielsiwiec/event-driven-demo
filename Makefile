@@ -17,7 +17,9 @@ run-e2e:
 	./gradlew clean cucumber
 e2e-tests: start-in-background wait-for-service run-e2e down
 test-request:
-	curl -X POST -H "Content-Type: application/json" http://localhost:8080/orders -d "{\"items\":[123, 456]}"
+	curl -X POST -H "Content-Type: application/json" http://localhost:8080/orders -d @test_request.json
 run-perf:
 	./gradlew gatlingRun
 perf-tests: start-in-background wait-for-service run-perf down
+kafka-consume:
+	docker exec broker /bin/kafka-console-consumer --topic $(TOPIC) --from-beginning --bootstrap-server localhost:9092

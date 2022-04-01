@@ -23,6 +23,8 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
+      KAFKA_LOG4J_LOGGERS: org.apache.zookeeper=WARN,org.apache.kafka=WARN,kafka=WARN,state.change.logger=WARN,kafka.controller=WARN
   orders-service:
     container_name: orders
     pull_policy: build

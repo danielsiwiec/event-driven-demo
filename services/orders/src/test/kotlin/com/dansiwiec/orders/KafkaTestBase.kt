@@ -24,8 +24,6 @@ abstract class KafkaTestBase {
         @Container
         val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.2.2.arm64"))
 
-        var logger = LoggerFactory.getLogger(this::class.java)!!
-
         lateinit var consumer: Consumer<String, Any>
 
         private fun createConsumer(): Consumer<String, Any> {
@@ -39,7 +37,6 @@ abstract class KafkaTestBase {
 
         class TestContainerInitializer: ApplicationContextInitializer<ConfigurableApplicationContext> {
             override fun initialize(applicationContext: ConfigurableApplicationContext) {
-                logger.info("Setting props: spring.kafka.bootstrap-servers=${kafka.bootstrapServers}")
                 TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     applicationContext,
                     "spring.kafka.bootstrap-servers=${kafka.bootstrapServers}"

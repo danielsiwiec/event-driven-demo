@@ -4,6 +4,8 @@ import java.time.Duration
 
 import io.gatling.javaapi.core.CoreDsl.*
 import io.gatling.javaapi.http.HttpDsl.*
+import scenarios.CreateOrder.Companion.requestName
+import scenarios.CreateOrder.Companion.createOrder
 
 class BasicSimulation : Simulation() {
 
@@ -11,23 +13,14 @@ class BasicSimulation : Simulation() {
         .contentTypeHeader("application/json")
         .acceptHeader("application/json") // Here are the common headers
 
-    private val scn = scenario("Scenario Name") // A scenario is a chain of requests and pauses
-        .exec(
-            http("request_1").post("/orders").body(StringBody(
-                """
-                    {
-                        "items": [{"sku":"1", "quantity": 1}],
-                        "customerId": "1"
-                     }
-                """.trimIndent()
-            ))
-        )
-
     init {
         setUp(
-            scn.injectOpen(
+            createOrder.injectOpen(
                 constantUsersPerSec(10.0).during(Duration.ofSeconds(30))
             ).protocols(httpProtocol)
+        ).assertions(
+            global().successfulRequests().percent().shouldBe(100.0),
+            details(requestName).responseTime().percentile(75.0).lt(Duration.ofMillis(20).toMillis().toInt())
         )
     }
 }

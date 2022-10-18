@@ -1,9 +1,9 @@
 package com.dansiwiec.catalogue
 
-import com.dansiwiec.catalogue.controllers.SkuRepository
-import com.dansiwiec.catalogue.models.Sku
+import com.dansiwiec.catalogue.services.SkuRepository
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
@@ -23,8 +23,6 @@ class ServiceTest : KafkaTestBase() {
     fun publishAllSkus() {
         val skuListSize = SkuRepository.catalogue.size
         val records = KafkaTestUtils.getRecords(consumer, Duration.ofSeconds(5).toMillis(), skuListSize)
-        val value = records.iterator().next().value() as Sku
-        print("SKU ${value.name}")
         assertThat(records.count(), equalTo(skuListSize))
     }
 }

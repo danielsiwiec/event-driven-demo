@@ -16,7 +16,8 @@ class BasicSimulation : Simulation() {
             http("request_1").post("/orders").body(StringBody(
                 """
                     {
-                        "items": [{"sku":"1", "quantity": 1}]
+                        "items": [{"sku":"1", "quantity": 1}],
+                        "customerId": "1"
                      }
                 """.trimIndent()
             ))

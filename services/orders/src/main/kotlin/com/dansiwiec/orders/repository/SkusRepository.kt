@@ -13,7 +13,7 @@ class SkusRepository {
 
     val skus = mutableSetOf<String>()
 
-    @KafkaListener(id = "order-service", topics = [Topics.SKUS])
+    @KafkaListener(id = "order-service-skus", topics = [Topics.SKUS])
     fun listenToSkus(sku: Sku) {
         logger.debug("Registering SKU ${sku.id}")
         skus.add(sku.id)

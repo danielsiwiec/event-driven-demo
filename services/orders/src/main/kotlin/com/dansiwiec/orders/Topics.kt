@@ -10,11 +10,12 @@ class Topics {
     companion object {
         const val ORDERS = "orders"
         const val SKUS = "skus"
+        const val CUSTOMERS = "customers"
     }
 
     @Bean
     fun orderTopic(): NewTopic {
-        return TopicBuilder.name("orders")
+        return TopicBuilder.name(ORDERS)
             .partitions(1)
             .replicas(1)
             .build()

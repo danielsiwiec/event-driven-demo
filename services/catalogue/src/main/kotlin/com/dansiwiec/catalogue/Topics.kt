@@ -12,8 +12,8 @@ class Topics {
     }
 
     @Bean
-    fun orderTopic(): NewTopic? {
-        return TopicBuilder.name("skus")
+    fun orderTopic(): NewTopic {
+        return TopicBuilder.name(SKUS)
             .partitions(1)
             .replicas(1)
             .build()

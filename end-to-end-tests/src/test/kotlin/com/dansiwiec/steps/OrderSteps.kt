@@ -31,8 +31,8 @@ class OrderSteps : En {
             RestAssured.baseURI = "http://localhost:8080"
         }
 
-        When("I create a following order:") { lineItems: DataTable ->
-            val order = Order(lineItems.asList(LineItem::class.java))
+        When("I create a following order for customer {int}:") { customerId: Int, lineItems: DataTable ->
+            val order = Order(lineItems.asList(LineItem::class.java), customerId)
             createOrderResponse = given().body(order).post("/orders")
 
         }

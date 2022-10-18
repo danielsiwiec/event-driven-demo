@@ -3,6 +3,7 @@ package com.dansiwiec.orders
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory
@@ -21,7 +22,9 @@ abstract class KafkaTestBase {
 
     companion object {
         @Container
-        val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.0.1"))
+        val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.2.2.arm64"))
+
+        var logger = LoggerFactory.getLogger(this::class.java)!!
 
         lateinit var consumer: Consumer<String, Any>
 
@@ -36,6 +39,7 @@ abstract class KafkaTestBase {
 
         class TestContainerInitializer: ApplicationContextInitializer<ConfigurableApplicationContext> {
             override fun initialize(applicationContext: ConfigurableApplicationContext) {
+                logger.info("Setting props: spring.kafka.bootstrap-servers=${kafka.bootstrapServers}")
                 TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     applicationContext,
                     "spring.kafka.bootstrap-servers=${kafka.bootstrapServers}"

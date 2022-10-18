@@ -1,4 +1,4 @@
-package com.dansiwiec.catalogue.controllers
+package com.dansiwiec.catalogue.services
 
 import com.dansiwiec.catalogue.Topics
 import com.dansiwiec.catalogue.models.Sku

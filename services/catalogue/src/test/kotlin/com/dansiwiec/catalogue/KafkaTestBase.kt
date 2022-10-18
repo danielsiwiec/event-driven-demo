@@ -21,7 +21,7 @@ abstract class KafkaTestBase {
 
     companion object {
         @Container
-        val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.0.1"))
+        val kafka = KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.2.2.arm64"))
 
         lateinit var consumer: Consumer<String, Any>
 

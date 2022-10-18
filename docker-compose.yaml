@@ -2,14 +2,14 @@
 version: '3.7'
 services:
   zookeeper:
-    image: confluentinc/cp-zookeeper:7.0.1
+    image: confluentinc/cp-zookeeper:7.2.2.arm64
     container_name: zookeeper
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
 
   broker:
-    image: confluentinc/cp-kafka:7.0.1
+    image: confluentinc/cp-kafka:7.2.2.arm64
     container_name: broker
     ports:
       - "9092:9092"
@@ -49,3 +49,9 @@ services:
       dockerfile: ../../common/Dockerfile
     ports:
       - "8082:8080"
+  customers-service:
+    container_name: customers
+    pull_policy: build
+    build:
+      context: services/customers
+      dockerfile: ../../common/Dockerfile

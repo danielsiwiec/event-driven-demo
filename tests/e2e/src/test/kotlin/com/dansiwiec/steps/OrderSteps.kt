@@ -10,7 +10,6 @@ import io.restassured.RestAssured.given
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.http.ContentType
 import io.restassured.response.Response
-import org.apache.http.HttpStatus
 
 
 class OrderSteps : En {

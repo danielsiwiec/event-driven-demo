@@ -7,6 +7,7 @@ Feature: Orders
       | 2   | 1        |
       | 4   | 2        |
     Then the response should be 200
+    And an email should be sent out
 
   Scenario: Create Order with a missing SKU
     When I create a following order for customer 1:

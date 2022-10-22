@@ -4,7 +4,7 @@ import io.cucumber.java8.En
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.http.ContentType
-import org.hamcrest.CoreMatchers.`is`
+import org.awaitility.Awaitility.await
 
 class EmailSteps : En {
 
@@ -22,18 +22,15 @@ class EmailSteps : En {
                 .post("http://localhost:8082/sentEmailCount/reset")
                 .then()
                 .statusCode(200)
-
-            RestAssured.given()
-                .get("http://localhost:8082/sentEmailCount")
-                .then()
-                .body(`is`(0.toString()))
         }
 
         Then("an email should be sent out") {
-            RestAssured.given()
-                .get("http://localhost:8082/sentEmailCount")
-                .then()
-                .body(`is`(1.toString()))
+            await().until {
+                RestAssured.given()
+                    .get("http://localhost:8082/sentEmailCount")
+                    .body.`as`(Int::class.java)
+                    .equals(1)
+            }
         }
     }
 }

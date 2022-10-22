@@ -4,6 +4,7 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.2")
     testImplementation("io.rest-assured:rest-assured:4.5.1")
     testImplementation("com.google.code.gson:gson:2.9.0")
+    testImplementation("org.awaitility:awaitility:4.2.0")
 }
 
 tasks.withType<Test> {

@@ -7,7 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
-class SkuService {
+class SkuRepo {
 
     var logger = LoggerFactory.getLogger(this::class.java)!!
     val skus = mutableMapOf<String, Sku>()

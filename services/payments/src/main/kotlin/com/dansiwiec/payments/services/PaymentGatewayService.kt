@@ -10,11 +10,11 @@ import org.springframework.web.client.RestTemplate
 class PaymentGatewayService(
     @Autowired private val restTemplate: RestTemplate,
     @Value("\${paymentGatewayUrl}") private val paymentGatewayUrl: String,
-    @Autowired private val customerService: CustomerService
+    @Autowired private val customerRepo: CustomerRepo
 ) {
 
     fun submitPayment(customerId: String, total: Double) {
-        val accountNumber = customerService.lookup(customerId)?.accountNumber ?: error("Customer missing")
+        val accountNumber = customerRepo.lookup(customerId)?.accountNumber ?: error("Customer missing")
         restTemplate.postForEntity("$paymentGatewayUrl/api/payment", PaymentRequest(accountNumber, total), Void::class.java)
     }
 }

@@ -1,8 +1,8 @@
 package com.dansiwiec.payments
 
 import com.dansiwiec.payments.models.*
-import com.dansiwiec.payments.services.CustomerService
-import com.dansiwiec.payments.services.SkuService
+import com.dansiwiec.payments.services.CustomerRepo
+import com.dansiwiec.payments.services.SkuRepo
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
@@ -16,8 +16,8 @@ import org.springframework.kafka.test.utils.KafkaTestUtils
 
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     class ServiceTest(
-        @Autowired val skuService: SkuService,
-        @Autowired var customerService: CustomerService
+        @Autowired val skuRepo: SkuRepo,
+        @Autowired var customerRepo: CustomerRepo
     ) : KafkaTestBase() {
 
         @BeforeEach
@@ -65,6 +65,6 @@ import org.springframework.kafka.test.utils.KafkaTestUtils
             assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.FAILED)
         }
 
-        private fun storesPopulated(): Boolean = skuService.skus.isNotEmpty() && customerService.customers.isNotEmpty()
+        private fun storesPopulated(): Boolean = skuRepo.skus.isNotEmpty() && customerRepo.customers.isNotEmpty()
 
     }

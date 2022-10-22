@@ -7,7 +7,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
-class CustomerService {
+class CustomerRepo {
 
     var logger = LoggerFactory.getLogger(this::class.java)!!
     val customers = mutableMapOf<String, Customer>()

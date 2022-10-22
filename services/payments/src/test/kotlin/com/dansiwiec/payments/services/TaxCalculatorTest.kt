@@ -14,19 +14,19 @@ class TaxCalculatorTest {
 
     @BeforeEach
     fun init() {
-        taxCalculator = TaxCalculator(customerService, skuService)
+        taxCalculator = TaxCalculator(customerRepo, skuRepo)
     }
     private lateinit var taxCalculator: TaxCalculator
 
 
-    @Mock lateinit var customerService: CustomerService
-    @Mock lateinit var skuService: SkuService
+    @Mock lateinit var customerRepo: CustomerRepo
+    @Mock lateinit var skuRepo: SkuRepo
 
     @BeforeEach
     fun initMocks() {
-        Mockito.lenient().`when`(customerService.lookup("1")).thenReturn(Customer(State.OR))
-        Mockito.lenient().`when`(customerService.lookup("2")).thenReturn(Customer(State.CA))
-        Mockito.lenient().`when`(skuService.lookup("1")).thenReturn(Sku(id = "1", name = "Lawnmower", price = 750.0))
+        Mockito.lenient().`when`(customerRepo.lookup("1")).thenReturn(Customer(State.OR))
+        Mockito.lenient().`when`(customerRepo.lookup("2")).thenReturn(Customer(State.CA))
+        Mockito.lenient().`when`(skuRepo.lookup("1")).thenReturn(Sku(id = "1", name = "Lawnmower", price = 750.0))
     }
 
     @Test

@@ -6,13 +6,13 @@ import org.springframework.stereotype.Component
 
 @Component
 class PricingService(
-    @Autowired private val skuService: SkuService,
+    @Autowired private val skuRepo: SkuRepo,
     @Autowired private val taxCalculator: TaxCalculator
 ) {
 
     fun calculatePrice(order: Order): Double {
         return order.items
-            .sumOf { item -> skuService.lookup(item.sku)?.price?.times(item.quantity) ?: error("SKU missing") }
+            .sumOf { item -> skuRepo.lookup(item.sku)?.price?.times(item.quantity) ?: error("SKU missing") }
             .plus(taxCalculator.calculateTax(order))
     }
 }

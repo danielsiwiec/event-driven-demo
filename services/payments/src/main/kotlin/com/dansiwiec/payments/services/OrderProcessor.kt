@@ -16,14 +16,11 @@ import org.springframework.web.client.RestClientException
         @Autowired private val paymentGatewayService: PaymentGatewayService,
         @Autowired private val kafkaTemplate: KafkaTemplate<Any, Any>
     ) {
-
         var logger = LoggerFactory.getLogger(this::class.java)!!
 
         @KafkaListener(id = "payment-service-orders", topics = [Topics.ORDERS])
         fun receiveOrder(order: Order) {
-            logger.info("Processing order ${order.id}")
             val totalPrice = pricingService.calculatePrice(order)
-
             try {
                 paymentGatewayService.submitPayment(order.customer, totalPrice)
                 kafkaTemplate.send(Topics.PAYMENTS, order.id, Payment(order.id, Payment.Status.PAID))

@@ -9,14 +9,14 @@ import kotlin.math.pow
 import kotlin.math.round
 
     @Component
-    class TaxCalculator(@Autowired private val customerService: CustomerService, @Autowired private val skuService: SkuService) {
+    class TaxCalculator(@Autowired private val customerRepo: CustomerRepo, @Autowired private val skuRepo: SkuRepo) {
 
         fun calculateTax(order: Order): Double {
             if (order.items.isEmpty()) return 0.0
-            val customer = customerService.lookup(order.customer)
+            val customer = customerRepo.lookup(order.customer)
             val taxRate = stateTaxRate(customer?.state ?: error("Customer missing"))
             return order.items
-                .associateWith { skuService.lookup(it.sku) }
+                .associateWith { skuRepo.lookup(it.sku) }
                 .map { it.key.quantity * taxRate * (it.value?.price ?: error("SKU missing")) }
                 .sum()
                 .round(2)

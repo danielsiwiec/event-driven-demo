@@ -27,7 +27,7 @@ import org.springframework.web.client.RestClientException
                 logger.info("Processed order ${order.id}")
             } catch (e: RestClientException) {
                 kafkaTemplate.send(Topics.PAYMENTS, order.id, Payment(order.id, Payment.Status.FAILED))
-                logger.warn("Payment failed order ${order.id}", e)
+                logger.warn("Payment failed for order ${order.id}: {}", e.message)
             }
         }
     }

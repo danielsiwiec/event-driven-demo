@@ -25,3 +25,4 @@ To run the unit and service tests, run `make service-tests`
 
 ### End-to-end tests
 `make e2e-tests` - this will spin up all the services beforehand. To run e2e tests against an already running environment, run `make run-e2e`.
+To observe traffic on a given topic, run `TOPIC=payments make kafka-consume`

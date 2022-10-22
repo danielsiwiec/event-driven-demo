@@ -1,7 +1,7 @@
 setup:
 	ln -sf ../../tools/pre-commit.sh .git/hooks/pre-commit
 build-all:
-	./gradlew clean bootJar
+	./gradlew bootJar
 start-in-background: build-all
 	docker-compose up -d
 logs:
@@ -10,11 +10,11 @@ up: start-in-background logs
 down:
 	docker-compose down
 service-tests:
-	./gradlew clean test --parallel
+	./gradlew test --parallel
 wait-for-service:
 	./tools/wait-for-service.sh
 run-e2e:
-	./gradlew clean cucumber
+	./gradlew cucumber
 e2e-tests: start-in-background wait-for-service run-e2e down
 test-request:
 	curl -X POST -H "Content-Type: application/json" http://localhost:8080/orders -d @test_request.json

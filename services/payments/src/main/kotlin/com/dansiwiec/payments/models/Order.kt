@@ -1,10 +1,6 @@
 package com.dansiwiec.payments.models
 
-data class Order(var id: Int = 0, var items: List<LineItem>) {
+data class Order(var id: String = "0", var items: List<LineItem>, var customer: String) {
 
-    constructor(): this(0, emptyList())
-
-    companion object {
-        var currenOrderId = 0
-    }
+    constructor(): this("0", emptyList(), "")
 }

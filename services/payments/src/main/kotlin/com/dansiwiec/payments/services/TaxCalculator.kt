@@ -15,10 +15,9 @@ import kotlin.math.round
             if (order.items.isEmpty()) return 0.0
             val customer = customerRepo.lookup(order.customer)
             val taxRate = stateTaxRate(customer?.state ?: error("Customer missing"))
+
             return order.items
-                .associateWith { skuRepo.lookup(it.sku) }
-                .map { it.key.quantity * taxRate * (it.value?.price ?: error("SKU missing")) }
-                .sum()
+                .sumOf { it.quantity * taxRate * (skuRepo.lookup(it.sku)?.price ?: error("SKU missing")) }
                 .round(2)
         }
 

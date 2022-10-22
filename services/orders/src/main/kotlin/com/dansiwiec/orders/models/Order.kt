@@ -1,14 +1,14 @@
 package com.dansiwiec.orders.models
 
-data class Order(val id: Int = 0, val items: List<LineItem>, val customerId: String) {
+data class Order(val id: String = "", val items: List<LineItem>, val customerId: String) {
 
-    constructor(): this(0, emptyList(), "")
+    constructor(): this("", emptyList(), "")
 
     companion object {
         var currenOrderId = 0
 
         fun toOrder(wireType: OrderRequest): Order {
-            return Order(currenOrderId++, wireType.items, wireType.customerId)
+            return Order(currenOrderId++.toString(), wireType.items, wireType.customerId)
         }
     }
 }

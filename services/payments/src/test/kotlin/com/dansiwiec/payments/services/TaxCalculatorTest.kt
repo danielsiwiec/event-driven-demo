@@ -1,6 +1,8 @@
 package com.dansiwiec.payments.services
 
 import com.dansiwiec.payments.models.*
+import com.dansiwiec.payments.repos.CustomerRepo
+import com.dansiwiec.payments.repos.SkuRepo
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -31,19 +33,19 @@ class TaxCalculatorTest {
 
     @Test
     fun shouldReturnNoTaxForAStateWithNoTax() {
-        val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 1 )), customer = "1"))
+        val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 1 )), customerId = "1"))
         assertThat(tax).isEqualTo(0.0)
     }
 
     @Test
     fun shouldCalculateTaxForCalifornia() {
-        val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 1 )), customer = "2"))
+        val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 1 )), customerId = "2"))
         assertThat(tax).isEqualTo(54.37)
     }
 
     @Test
     fun shouldConsiderQuantity() {
-        val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 2 )), customer = "2"))
+        val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 2 )), customerId = "2"))
         assertThat(tax).isEqualTo(108.75)
     }
 

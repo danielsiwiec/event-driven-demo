@@ -6,6 +6,7 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock
 import org.springframework.context.ApplicationContextInitializer
 import org.springframework.context.ConfigurableApplicationContext
@@ -13,6 +14,7 @@ import org.springframework.kafka.core.DefaultKafkaConsumerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.serializer.JsonDeserializer
 import org.springframework.kafka.test.utils.KafkaTestUtils
+import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.support.TestPropertySourceUtils
 import org.testcontainers.containers.KafkaContainer
@@ -23,6 +25,8 @@ import org.testcontainers.utility.DockerImageName
     @Testcontainers
     @ContextConfiguration(initializers = [TestBase.Companion.TestContainerInitializer::class])
     @AutoConfigureWireMock(port = 0)
+    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+    @ActiveProfiles("test")
     abstract class TestBase {
 
         @Autowired lateinit var kafkaTemplate: KafkaTemplate<String, Any>

@@ -1,8 +1,8 @@
 package com.dansiwiec.payments
 
 import com.dansiwiec.payments.models.*
-import com.dansiwiec.payments.services.CustomerRepo
-import com.dansiwiec.payments.services.SkuRepo
+import com.dansiwiec.payments.repos.CustomerRepo
+import com.dansiwiec.payments.repos.SkuRepo
 import com.github.tomakehurst.wiremock.client.WireMock.*
 import org.apache.http.HttpStatus
 import org.assertj.core.api.Assertions.assertThat
@@ -13,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.kafka.test.utils.KafkaTestUtils
 
-
-    @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
     class ServiceTest(@Autowired val skuRepo: SkuRepo, @Autowired var customerRepo: CustomerRepo) : TestBase() {
 
         @BeforeEach

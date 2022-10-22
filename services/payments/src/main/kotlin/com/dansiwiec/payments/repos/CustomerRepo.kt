@@ -1,4 +1,4 @@
-package com.dansiwiec.payments.services
+package com.dansiwiec.payments.repos
 
 import com.dansiwiec.payments.Topics
 import com.dansiwiec.payments.models.Customer
@@ -17,7 +17,7 @@ class CustomerRepo {
         return customers[id]
     }
 
-    @KafkaListener(id = "order-service-customers", topics = [Topics.CUSTOMERS])
+    @KafkaListener(id = "payment-service-customers", topics = [Topics.CUSTOMERS])
     fun listenToSkus(customer: Customer) {
         logger.debug("Registering Customer ${customer.id}")
         customers[customer.id] = customer

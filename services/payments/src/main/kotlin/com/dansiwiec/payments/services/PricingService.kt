@@ -1,6 +1,7 @@
 package com.dansiwiec.payments.services
 
 import com.dansiwiec.payments.models.Order
+import com.dansiwiec.payments.repos.SkuRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 

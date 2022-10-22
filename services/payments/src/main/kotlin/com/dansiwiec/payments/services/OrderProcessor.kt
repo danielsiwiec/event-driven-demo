@@ -20,9 +20,9 @@ import org.springframework.web.client.RestClientException
 
         @KafkaListener(id = "payment-service-orders", topics = [Topics.ORDERS])
         fun receiveOrder(order: Order) {
-            val totalPrice = pricingService.calculatePrice(order)
             try {
-                paymentGatewayService.submitPayment(order.customer, totalPrice)
+                val totalPrice = pricingService.calculatePrice(order)
+                paymentGatewayService.submitPayment(order.customerId, totalPrice)
                 kafkaTemplate.send(Topics.PAYMENTS, order.id, Payment(order.id, Payment.Status.PAID))
                 logger.info("Processed order ${order.id}")
             } catch (e: RestClientException) {

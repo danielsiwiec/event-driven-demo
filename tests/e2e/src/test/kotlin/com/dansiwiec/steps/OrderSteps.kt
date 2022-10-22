@@ -19,7 +19,7 @@ class OrderSteps : En {
     init {
 
         DataTableType { entry: Map<String, String> ->
-            LineItem(entry["sku"]!!.toInt(), entry["quantity"]!!.toInt())
+            LineItem(entry["sku"]!!, entry["quantity"]!!.toInt())
         }
 
         Before { _: Scenario ->
@@ -30,7 +30,7 @@ class OrderSteps : En {
             RestAssured.baseURI = "http://localhost:8080"
         }
 
-        When("I create a following order for customer {int}:") { customerId: Int, lineItems: DataTable ->
+        When("I create a following order for customer {}:") { customerId: String, lineItems: DataTable ->
             val order = Order(lineItems.asList(LineItem::class.java), customerId)
             createOrderResponse = given().body(order).post("/orders")
 

@@ -2,6 +2,8 @@ package com.dansiwiec.payments.services
 
 import com.dansiwiec.payments.models.Order
 import com.dansiwiec.payments.models.State
+import com.dansiwiec.payments.repos.CustomerRepo
+import com.dansiwiec.payments.repos.SkuRepo
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 import java.lang.IllegalArgumentException
@@ -13,7 +15,7 @@ import kotlin.math.round
 
         fun calculateTax(order: Order): Double {
             if (order.items.isEmpty()) return 0.0
-            val customer = customerRepo.lookup(order.customer)
+            val customer = customerRepo.lookup(order.customerId)
             val taxRate = stateTaxRate(customer?.state ?: error("Customer missing"))
 
             return order.items

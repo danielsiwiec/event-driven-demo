@@ -33,14 +33,18 @@ services:
       dockerfile: ../../common/Dockerfile
     ports:
       - "8080:8080"
+  payments-service:
+    container_name: payments
+    pull_policy: build
+    build:
+      context: services/payments
+      dockerfile: ../../common/Dockerfile
   catalogue-service:
     container_name: catalogue
     pull_policy: build
     build:
       context: services/catalogue
       dockerfile: ../../common/Dockerfile
-    ports:
-      - "8081:8080"
   email-service:
     container_name: email
     pull_policy: build

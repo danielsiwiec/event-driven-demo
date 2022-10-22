@@ -48,7 +48,7 @@ class ServiceTest : KafkaTestBase() {
 
         assertThat(response.statusCode, equalTo(HttpStatus.OK))
         val singleRecord = KafkaTestUtils.getSingleRecord(consumer, Topics.ORDERS)
-        assertThat(singleRecord.key(), equalTo(orderId.toString()))
+        assertThat(singleRecord.key(), equalTo(orderId))
 
         val value = singleRecord.value() as Order
         assertThat(value.id, equalTo(orderId))

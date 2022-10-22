@@ -59,3 +59,11 @@ services:
     build:
       context: services/customers
       dockerfile: ../../common/Dockerfile
+  payment-gateway:
+    container_name: payment-gateway
+    image: wiremock/wiremock:2.34.0
+#    command: "--port 9999"
+    volumes:
+      - ./tools/wiremock:/home/wiremock
+    ports:
+      - "8083:8080"

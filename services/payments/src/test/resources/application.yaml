@@ -1,1 +1,1 @@
-paymentGatewayUrl: http://localhost:9999
+paymentGatewayUrl: http://localhost:${wiremock.server.port}

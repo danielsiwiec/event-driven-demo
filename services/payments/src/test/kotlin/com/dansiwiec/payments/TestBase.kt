@@ -21,9 +21,9 @@ import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
 
     @Testcontainers
-    @ContextConfiguration(initializers = [KafkaTestBase.Companion.TestContainerInitializer::class])
-    @AutoConfigureWireMock(port = 9999)
-    abstract class KafkaTestBase {
+    @ContextConfiguration(initializers = [TestBase.Companion.TestContainerInitializer::class])
+    @AutoConfigureWireMock(port = 0)
+    abstract class TestBase {
 
         @Autowired lateinit var kafkaTemplate: KafkaTemplate<String, Any>
         @Autowired lateinit var wireMockServer: WireMockServer

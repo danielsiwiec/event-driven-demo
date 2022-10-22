@@ -15,10 +15,7 @@ import org.springframework.kafka.test.utils.KafkaTestUtils
 
 
     @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-    class ServiceTest(
-        @Autowired val skuRepo: SkuRepo,
-        @Autowired var customerRepo: CustomerRepo
-    ) : KafkaTestBase() {
+    class ServiceTest(@Autowired val skuRepo: SkuRepo, @Autowired var customerRepo: CustomerRepo) : TestBase() {
 
         @BeforeEach
         fun resetMocks() {

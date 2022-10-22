@@ -10,7 +10,7 @@ up: start-in-background logs
 down:
 	docker-compose down
 service-tests:
-	./gradlew test --parallel
+	./gradlew test
 wait-for-service:
 	./tools/wait-for-service.sh
 run-e2e:

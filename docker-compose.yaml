@@ -39,6 +39,8 @@ services:
     build:
       context: services/payments
       dockerfile: ../../common/Dockerfile
+    ports:
+      - "8081:8080"
   catalogue-service:
     container_name: catalogue
     pull_policy: build

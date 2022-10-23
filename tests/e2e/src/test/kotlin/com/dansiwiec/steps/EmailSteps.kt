@@ -24,12 +24,12 @@ class EmailSteps : En {
                 .statusCode(200)
         }
 
-        Then("an email should be sent out") {
+        Then("{int} email(s) should be sent out") { count:Int ->
             await().until {
                 RestAssured.given()
                     .get("http://localhost:8082/sentEmailCount")
                     .body.`as`(Int::class.java)
-                    .equals(1)
+                    .equals(count)
             }
         }
     }

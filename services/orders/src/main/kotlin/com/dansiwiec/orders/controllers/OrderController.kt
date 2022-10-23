@@ -26,14 +26,15 @@ class OrderController(
     fun createOrder(@RequestBody @Valid wireOrder: OrderRequest): ResponseEntity<Order> {
         val order = Order.toOrder(wireOrder)
         validateOrder(order)
-        logger.info("Creating order ${order.id}")
-        template.send(Topics.ORDERS, order.id.toString(), order)
+        logger.info("Order ${order.id}: Creating order")
+        template.send(Topics.ORDERS, order.id, order)
         return ResponseEntity.ok(order)
     }
 
     private fun validateOrder(order: Order) {
         order.items.find { !skusRepository.isValid(it.sku) }?.let { throw BadSkuException() }
         if (!customerRepository.isValid(order.customerId)) { throw BadCustomerException() }
+        logger.debug("Order ${order.id}: Validated inventory")
     }
 }
 

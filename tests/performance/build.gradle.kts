@@ -1,3 +1,3 @@
 plugins {
-    id("io.gatling.gradle") version "3.7.6"
+    id("io.gatling.gradle") version "3.8.2"
 }

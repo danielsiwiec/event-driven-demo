@@ -4,6 +4,7 @@
     "url": "/api/payment"
   },
   "response": {
-    "status": 200
+    "status": 200,
+    "fixedDelayMilliseconds": 1000
   }
 }

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
 @Component
-class PricingService(
+class PricingCalculator(
     @Autowired private val skuRepo: SkuRepo,
     @Autowired private val taxCalculator: TaxCalculator
 ) {

@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClientException
 
     @Service
     class OrderProcessor(
-        @Autowired private val pricingService: PricingService,
+        @Autowired private val pricingCalculator: PricingCalculator,
         @Autowired private val paymentGatewayService: PaymentGatewayService,
         @Autowired private val kafkaTemplate: KafkaTemplate<Any, Any>
     ) {
@@ -21,7 +21,7 @@ import org.springframework.web.client.RestClientException
         @KafkaListener(id = "payment-service-orders", topics = [Topics.ORDERS])
         fun receiveOrder(order: Order) {
             try {
-                val totalPrice = pricingService.calculatePrice(order)
+                val totalPrice = pricingCalculator.calculatePrice(order)
                 paymentGatewayService.submitPayment(order.customerId, totalPrice)
                 kafkaTemplate.send(Topics.PAYMENTS, order.id, Payment(order.id, Payment.Status.PAID))
                 logger.info("Order ${order.id}: Processed order")

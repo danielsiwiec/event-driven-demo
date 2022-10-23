@@ -60,6 +60,150 @@ import org.springframework.kafka.test.utils.KafkaTestUtils
             assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.FAILED)
         }
 
+        @Test
+        fun testSuccessfulOrder1() {
+            // GIVEN
+            kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
+            kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
+            await().until(this::storesPopulated)
+
+            // WHEN
+            kafkaTemplate.send(Topics.ORDERS, Order("1", listOf(LineItem("1", 2)), "1"))
+
+            // THEN
+            val paymentMessage = KafkaTestUtils.getSingleRecord(consumer, Topics.PAYMENTS)
+            assertThat(paymentMessage.value().id).isEqualTo("1")
+            assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.PAID)
+
+            wireMockServer.verify(
+                1,
+                postRequestedFor(urlEqualTo("/api/payment")).withRequestBody(
+                    equalToJson("""{"accountNumber": 123, "total": 1608.75}""")
+                )
+            )
+        }
+
+        @Test
+        fun testSuccessfulOrder2() {
+            // GIVEN
+            kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
+            kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
+            await().until(this::storesPopulated)
+
+            // WHEN
+            kafkaTemplate.send(Topics.ORDERS, Order("1", listOf(LineItem("1", 2)), "1"))
+
+            // THEN
+            val paymentMessage = KafkaTestUtils.getSingleRecord(consumer, Topics.PAYMENTS)
+            assertThat(paymentMessage.value().id).isEqualTo("1")
+            assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.PAID)
+
+            wireMockServer.verify(
+                1,
+                postRequestedFor(urlEqualTo("/api/payment")).withRequestBody(
+                    equalToJson("""{"accountNumber": 123, "total": 1608.75}""")
+                )
+            )
+        }
+
+        @Test
+        fun testSuccessfulOrder3() {
+            // GIVEN
+            kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
+            kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
+            await().until(this::storesPopulated)
+
+            // WHEN
+            kafkaTemplate.send(Topics.ORDERS, Order("1", listOf(LineItem("1", 2)), "1"))
+
+            // THEN
+            val paymentMessage = KafkaTestUtils.getSingleRecord(consumer, Topics.PAYMENTS)
+            assertThat(paymentMessage.value().id).isEqualTo("1")
+            assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.PAID)
+
+            wireMockServer.verify(
+                1,
+                postRequestedFor(urlEqualTo("/api/payment")).withRequestBody(
+                    equalToJson("""{"accountNumber": 123, "total": 1608.75}""")
+                )
+            )
+        }
+
+        @Test
+        fun testSuccessfulOrder4() {
+            // GIVEN
+            kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
+            kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
+            await().until(this::storesPopulated)
+
+            // WHEN
+            kafkaTemplate.send(Topics.ORDERS, Order("1", listOf(LineItem("1", 2)), "1"))
+
+            // THEN
+            val paymentMessage = KafkaTestUtils.getSingleRecord(consumer, Topics.PAYMENTS)
+            assertThat(paymentMessage.value().id).isEqualTo("1")
+            assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.PAID)
+
+            wireMockServer.verify(
+                1,
+                postRequestedFor(urlEqualTo("/api/payment")).withRequestBody(
+                    equalToJson("""{"accountNumber": 123, "total": 1608.75}""")
+                )
+            )
+        }
+
+        @Test
+        fun testSuccessfulOrder5() {
+            // GIVEN
+            kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
+            kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
+            await().until(this::storesPopulated)
+
+            // WHEN
+            kafkaTemplate.send(Topics.ORDERS, Order("1", listOf(LineItem("1", 2)), "1"))
+
+            // THEN
+            val paymentMessage = KafkaTestUtils.getSingleRecord(consumer, Topics.PAYMENTS)
+            assertThat(paymentMessage.value().id).isEqualTo("1")
+            assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.PAID)
+
+            wireMockServer.verify(
+                1,
+                postRequestedFor(urlEqualTo("/api/payment")).withRequestBody(
+                    equalToJson("""{"accountNumber": 123, "total": 1608.75}""")
+                )
+            )
+        }
+
+        @Test
+        fun testSuccessfulOrder6() {
+            // GIVEN
+            kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
+            kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
+            await().until(this::storesPopulated)
+
+            // WHEN
+            kafkaTemplate.send(Topics.ORDERS, Order("1", listOf(LineItem("1", 2)), "1"))
+
+            // THEN
+            val paymentMessage = KafkaTestUtils.getSingleRecord(consumer, Topics.PAYMENTS)
+            assertThat(paymentMessage.value().id).isEqualTo("1")
+            assertThat(paymentMessage.value().status).isEqualTo(Payment.Status.PAID)
+
+            wireMockServer.verify(
+                1,
+                postRequestedFor(urlEqualTo("/api/payment")).withRequestBody(
+                    equalToJson("""{"accountNumber": 123, "total": 1608.75}""")
+                )
+            )
+        }
+
         private fun storesPopulated(): Boolean = skuRepo.skus.isNotEmpty() && customerRepo.customers.isNotEmpty()
 
     }

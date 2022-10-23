@@ -26,7 +26,7 @@ services:
       KAFKA_LOG4J_ROOT_LOGLEVEL: WARN
       KAFKA_LOG4J_LOGGERS: org.apache.zookeeper=WARN,org.apache.kafka=WARN,kafka=WARN,state.change.logger=WARN,kafka.controller=WARN
   orders-service:
-    container_name: orders
+    container_name: orders-service
     pull_policy: build
     build:
       context: services/orders
@@ -34,7 +34,7 @@ services:
     ports:
       - "8080:8080"
   payments-service:
-    container_name: payments
+    container_name: payments-service
     pull_policy: build
     build:
       context: services/payments
@@ -42,13 +42,13 @@ services:
     ports:
       - "8081:8080"
   catalogue-service:
-    container_name: catalogue
+    container_name: catalogue-service
     pull_policy: build
     build:
       context: services/catalogue
       dockerfile: ../../common/Dockerfile
   email-service:
-    container_name: email
+    container_name: email-service
     pull_policy: build
     build:
       context: services/email
@@ -56,7 +56,7 @@ services:
     ports:
       - "8082:8080"
   customers-service:
-    container_name: customers
+    container_name: customers-service
     pull_policy: build
     build:
       context: services/customers

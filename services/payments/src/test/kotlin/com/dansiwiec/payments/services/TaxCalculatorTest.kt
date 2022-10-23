@@ -23,26 +23,22 @@ class TaxCalculatorTest {
 
     @Mock lateinit var customerRepo: CustomerRepo
     @Mock lateinit var skuRepo: SkuRepo
-
     @BeforeEach
     fun initMocks() {
         Mockito.lenient().`when`(customerRepo.lookup("1")).thenReturn(Customer(State.OR))
         Mockito.lenient().`when`(customerRepo.lookup("2")).thenReturn(Customer(State.CA))
         Mockito.lenient().`when`(skuRepo.lookup("1")).thenReturn(Sku(id = "1", name = "Lawnmower", price = 750.0))
     }
-
     @Test
     fun shouldReturnNoTaxForAStateWithNoTax() {
         val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 1 )), customerId = "1"))
         assertThat(tax).isEqualTo(0.0)
     }
-
     @Test
     fun shouldCalculateTaxForCalifornia() {
         val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 1 )), customerId = "2"))
         assertThat(tax).isEqualTo(54.37)
     }
-
     @Test
     fun shouldConsiderQuantity() {
         val tax = taxCalculator.calculateTax(Order(items = listOf(LineItem(sku = "1", quantity = 2 )), customerId = "2"))

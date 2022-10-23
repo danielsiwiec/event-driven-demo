@@ -23,9 +23,9 @@ import org.springframework.kafka.test.utils.KafkaTestUtils
         @Test
         fun testSuccessfulOrder() {
             // GIVEN
-            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
             kafkaTemplate.send(Topics.CUSTOMERS, Customer(id = "1", state = State.CA, accountNumber = 123))
             kafkaTemplate.send(Topics.SKUS, Sku("1", "Lawnmower", 750.0))
+            wireMockServer.stubFor(post("/api/payment").willReturn(aResponse().withStatus(HttpStatus.SC_OK)))
             await().until(this::storesPopulated)
 
             // WHEN

@@ -9,8 +9,7 @@ import java.time.Duration
             setUp(
                 scenario("order happy path")
                     .group("Process Order").on(
-                        exec(resetCounter())
-                            .exec(postOrder())
+                        exec(postOrder())
                             .exec(waitForShipmentToDispatch())
                     ).injectClosed(constantConcurrentUsers(1).during(Duration.ofSeconds(30)))
             ).protocols(
@@ -41,4 +40,4 @@ fun waitForShipmentToDispatch() = doWhile { !it.getString("count").equals("1") }
             .get("http://localhost:8084/shipmentsCount")
             .check(bodyString().saveAs("count"))
     )
-)
+).exec(resetCounter())

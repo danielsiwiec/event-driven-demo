@@ -7,8 +7,8 @@
         | 2   | 1        |
         | 4   | 2        |
       Then the response should be 200
-      And 1 email should be sent out
-      And a payment should be sent out
+      And 2 emails should be sent out
+      And a payment should be submitted
       And 1 shipment should be dispatched
 
     Scenario: Create Order with a missing SKU
@@ -16,7 +16,7 @@
         | sku | quantity |
         | 99  | 1        |
       Then the response should be 400
-      And a payment should not be sent out
+      And a payment should not be submitted
       And a shipment should not be dispatched
 
 

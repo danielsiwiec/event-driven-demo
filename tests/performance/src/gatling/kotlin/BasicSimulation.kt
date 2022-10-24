@@ -11,7 +11,7 @@ import java.time.Duration
                     .group("Process Order").on(
                         exec(resetCounter())
                             .exec(postOrder())
-                            .exec(waitForPaymentToProcess())
+                            .exec(waitForShipmentToDispatch())
                     ).injectClosed(constantConcurrentUsers(1).during(Duration.ofSeconds(30)))
             ).protocols(
                 http
@@ -33,12 +33,12 @@ fun postOrder() = http("create order")
         )
     ).check(status().`is`(200))
 
-fun resetCounter() = http("reset payment counter").post("http://localhost:8081/sentPaymentsCount/reset")
+fun resetCounter() = http("reset payment counter").post("http://localhost:8084/shipmentsCount/reset")
 
-fun waitForPaymentToProcess() = doWhile { !it.getString("count").equals("1") }.on(
+fun waitForShipmentToDispatch() = doWhile { !it.getString("count").equals("1") }.on(
     exec(
-        http("get payment counter")
-            .get("http://localhost:8081/sentPaymentsCount")
+        http("get shipment counter")
+            .get("http://localhost:8084/shipmentsCount")
             .check(bodyString().saveAs("count"))
     )
 )

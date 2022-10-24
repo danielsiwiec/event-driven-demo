@@ -25,7 +25,7 @@ class PaymentSteps : En {
                 .statusCode(200)
         }
 
-        Then("a payment should be sent out") {
+        Then("a payment should be submitted") {
             await().until {
                 RestAssured.given()
                     .get("http://localhost:8081/sentPaymentsCount")
@@ -34,7 +34,7 @@ class PaymentSteps : En {
             }
         }
 
-        Then("a payment should not be sent out") {
+        Then("a payment should not be submitted") {
             await().during(Duration.ofSeconds(2)).until {
                 RestAssured.given()
                     .get("http://localhost:8081/sentPaymentsCount")

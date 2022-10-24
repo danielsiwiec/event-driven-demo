@@ -24,7 +24,7 @@ import org.springframework.web.client.RestClientException
                 val totalPrice = pricingCalculator.calculatePrice(order)
                 paymentGatewayService.submitPayment(order.customerId, totalPrice)
                 kafkaTemplate.send(Topics.PAYMENTS, order.id, Payment(order.id, Payment.Status.PAID))
-                logger.info("Order ${order.id}: Processed order")
+                logger.info("Order ${order.id}: Processed payment")
             } catch (e: RestClientException) {
                 kafkaTemplate.send(Topics.PAYMENTS, order.id, Payment(order.id, Payment.Status.FAILED))
                 logger.warn("Order ${order.id}: Payment failed: {}", e.message)
